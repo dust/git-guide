@@ -5,7 +5,7 @@ Git简易指南
 # 配置git帐户
 
 # getting started
-* 从本地创建仓库  
+* 从本地创建仓库
 
     dust@dust-t400:~/myworks/kmfrog$ mkdir git-guide
     dust@dust-t400:~/myworks/kmfrog$ cd git-guide
@@ -16,11 +16,11 @@ Git简易指南
     dust@dust-t400:~/myworks/kmfrog/git-guide$ git remote add origin git@github.com:dust/git-guide.git
     dust@dust-t400:~/myworks/kmfrog/git-guild$ git push -u origin master
     
-* 从远程克隆仓库   
+* 从远程克隆仓库
 
-	dust@dust-t400:~/myworks/kmfrog$ git clone git@github.com:dust/git-guide.git
+    dust@dust-t400:~/myworks/kmfrog$ git clone git@github.com:dust/git-guide.git
 	
-* push存在的本地仓库到远程   
+* push存在的本地仓库到远程
 
     git remote add origin git@github.com:dust/git-guide.git
     git push -u origin master
