@@ -34,7 +34,7 @@ Git简易指南
 
 # 基本概念和版本控制流程
 
-[场景及流程图](!https://github.com/dust/git-guide/blob/master/etc/status-flow.png)
+[场景及流程图](!https://raw.githubusercontent.com/dust/git-guide/master/etc/status-flow.png)
 
 ## git add
 * tracked
