@@ -34,7 +34,7 @@ Git简易指南
 
 # 基本概念和版本控制流程
 
-[场景及流程图](!https://raw.githubusercontent.com/dust/git-guide/master/etc/status-flow.png)
+![场景及流程图](https://raw.githubusercontent.com/dust/git-guide/master/etc/status-flow.png)
 
 ## git add
 * tracked
@@ -47,6 +47,7 @@ Git简易指南
 * 要忽略指定模式以外的文件或目录，可以在模式前加上惊叹号（!）取反。
 
 .gitignore文件示例
+
     # 此为注释 – 将被 Git 忽略
     # 忽略所有 .a 结尾的文件
     *.a
@@ -58,6 +59,8 @@ Git简易指南
     build/
     # 会忽略 doc/notes.txt 但不包括 doc/server/arch.txt
     doc/*.txt
+
+
 ## git commit
 * 暂存区(stage area)
 * commit-id/change-id
