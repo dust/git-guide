@@ -7,6 +7,7 @@ Git简易指南
 # getting started
 * 从本地创建仓库
 
+``` shell
     dust@dust-t400:~/myworks/kmfrog$ mkdir git-guide
     dust@dust-t400:~/myworks/kmfrog$ cd git-guide
     dust@dust-t400:~/myworks/kmfrog/git-guide$ vim README.md
@@ -15,15 +16,20 @@ Git简易指南
     Initialized empty Git repository in /home/dust/myworks/kmfrog/git-guide/.git/
     dust@dust-t400:~/myworks/kmfrog/git-guide$ git remote add origin git@github.com:dust/git-guide.git
     dust@dust-t400:~/myworks/kmfrog/git-guild$ git push -u origin master
-    
+```
+
 * 从远程克隆仓库
 
+``` shell
     dust@dust-t400:~/myworks/kmfrog$ git clone git@github.com:dust/git-guide.git
+```
 	
 * push存在的本地仓库到远程
 
+``` shell
     git remote add origin git@github.com:dust/git-guide.git
     git push -u origin master
+```
 
 
 # 基本概念和版本控制流程
