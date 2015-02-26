@@ -345,7 +345,7 @@ Git 使用的标签有两种类型：轻量级的（lightweight）和含附注�
 
 * 含附注的标签
 创建一个含附注类型的标签非常简单，用 -a （取 annotated 的首字母）指定标签名字即可：
-    
+
     dust@dust-t400:~/myworks/kmfrog/git-guide$ git tag -a v2015.2.26.13.00 -m 'before'
     dust@dust-t400:~/myworks/kmfrog/git-guide$ git tag
     v2015.2.26.13.00
@@ -371,7 +371,8 @@ Git 使用的标签有两种类型：轻量级的（lightweight）和含附注�
      * 暂存区(stage area)
      * commit-id/change-id
      ....
-     
+
+
 * 含附注的标签
 
 创建一个含附注类型的标签非常简单，用 -a （译注：取 annotated 的首字母）指定标签名字即可
@@ -391,6 +392,7 @@ Git 使用的标签有两种类型：轻量级的（lightweight）和含附注�
     v1.4
     v1.4-lw
     v1.5
+
 
 * 分享标签
 默认情况下，git push 并不会把标签传送到远端服务器上，只有通过显式命令才能分享标签到远端仓库。其命令格式如同推送分支，运行 git push origin [tagname] 即可：
