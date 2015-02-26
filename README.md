@@ -345,7 +345,7 @@ Git 使用的标签有两种类型：轻量级的（lightweight）和含附注�
 
 * 含附注的标签
 创建一个含附注类型的标签非常简单，用 -a （取 annotated 的首字母）指定标签名字即可：
-
+    
     dust@dust-t400:~/myworks/kmfrog/git-guide$ git tag -a v2015.2.26.13.00 -m 'before'
     dust@dust-t400:~/myworks/kmfrog/git-guide$ git tag
     v2015.2.26.13.00
@@ -353,15 +353,15 @@ Git 使用的标签有两种类型：轻量级的（lightweight）和含附注�
     tag v2015.2.26.13.00
     Tagger: dust <dust@downjoy.com>
     Date:   Thu Feb 26 15:28:12 2015 +0800
-
+    
     before
-
+    
     commit 23ff0573348364de0c0a67d27cabfb8f2bb95ffd
     Author: dust <dust@downjoy.com>
     Date:   Thu Feb 26 10:25:42 2015 +0800
-
+    
         v2015.2.26.11.25
-
+    
     diff --git a/README.md b/README.md
     index cc18db5..ffeb5fc 100644
     --- a/README.md
@@ -402,7 +402,6 @@ Git 使用的标签有两种类型：轻量级的（lightweight）和含附注�
     Total 44 (delta 18), reused 8 (delta 1)
     To git@github.com:schacon/simplegit.git
     * [new tag] v1.5 -> v1.5
-
 
 # 分枝
 Git 的分支可谓是难以置信的轻量级，它的新建操作几乎可以在瞬间完成，并且在不同分支间切换起来也差不多一样快。和许多其他版本控制系统不同，Git 鼓励在工作流程中频繁使用分支与合并，哪怕一天之内进行许多次都没有关系。理解分支的概念并熟练运用后，你才会意识到为什么 Git 是一个如此强大而独特的工具，并从此真正改变你的开发方式。
