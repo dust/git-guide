@@ -396,8 +396,8 @@ Git 使用的标签有两种类型：轻量级的（lightweight）和含附注�
     v1.5
 
 * 分享标签
-默认情况下，git push 并不会把标签传送到远端服务器上，只有通过显式命令才能分享标签到远端仓库。其命令格式如同推送分支，运行 git push origin [tagname] 即可
-
+默认情况下，git push 并不会把标签传送到远端服务器上，只有通过显式命令才能分享标签到远端仓库。其命令格式如同推送分支，运行 git push origin [tagname] 即可。
+``` shell
     $ git push origin v1.5
     Counting objects: 50, done.
     Compressing objects: 100% (38/38), done.
@@ -405,6 +405,7 @@ Git 使用的标签有两种类型：轻量级的（lightweight）和含附注�
     Total 44 (delta 18), reused 8 (delta 1)
     To git@github.com:schacon/simplegit.git
     * [new tag] v1.5 -> v1.5
+```
 
 # 分枝
 Git 的分支可谓是难以置信的轻量级，它的新建操作几乎可以在瞬间完成，并且在不同分支间切换起来也差不多一样快。和许多其他版本控制系统不同，Git 鼓励在工作流程中频繁使用分支与合并，哪怕一天之内进行许多次都没有关系。理解分支的概念并熟练运用后，你才会意识到为什么 Git 是一个如此强大而独特的工具，并从此真正改变你的开发方式。
