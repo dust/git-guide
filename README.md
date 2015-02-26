@@ -360,7 +360,7 @@ Git 使用的标签有两种类型：轻量级的（lightweight）和含附注�
     Author: dust <dust@downjoy.com>
     Date:   Thu Feb 26 10:25:42 2015 +0800
     
-        v2015.2.26.11.25
+    v2015.2.26.11.25
     
     diff --git a/README.md b/README.md
     index cc18db5..ffeb5fc 100644
@@ -372,7 +372,6 @@ Git 使用的标签有两种类型：轻量级的（lightweight）和含附注�
      * commit-id/change-id
      ....
 
-
 * 含附注的标签
 
 创建一个含附注类型的标签非常简单，用 -a （译注：取 annotated 的首字母）指定标签名字即可
@@ -383,7 +382,8 @@ Git 使用的标签有两种类型：轻量级的（lightweight）和含附注�
     1024-bit DSA key, ID F721C45A, created 2009-02-09
 
 * 轻量级标签
-轻量级标签实际上就是一个保存着对应提交对象的校验和信息的文件。要创建这样的标签，一个 -a，-s 或 -m 选项都不用，直接给出标签名字即可：
+
+轻量级标签实际上就是一个保存着对应提交对象的校验和信息的文件。要创建这样的标签，一个 -a，-s 或 -m 选项都不用，直接给出标签名字即可
 
     $ git tag v1.4-lw
     $ git tag
@@ -392,7 +392,6 @@ Git 使用的标签有两种类型：轻量级的（lightweight）和含附注�
     v1.4
     v1.4-lw
     v1.5
-
 
 * 分享标签
 默认情况下，git push 并不会把标签传送到远端服务器上，只有通过显式命令才能分享标签到远端仓库。其命令格式如同推送分支，运行 git push origin [tagname] 即可：
