@@ -420,9 +420,11 @@ Git 的分支可谓是难以置信的轻量级，它的新建操作几乎可以�
 这样的一个提交中，概念上来说，仓库中各个对象保存的数据和相互关系看起来如图所示：
 
 ![storage struct of a commit](https://raw.githubusercontent.com/dust/git-guide/master/etc/a-commit-struct.png)
+
 仓库中共有5个对象，三个文件的快照内容blob对象，一个目录树索引对象，一个指向目录树(root)的索引及其它元数据的commit对象。如果再经过两次修改及提交后，仓库历史会变成如图所示的结构：
 
 ![多次提交后存储结构](https://raw.githubusercontent.com/dust/git-guide/master/etc/multi-commit-relationship-graph.png)
+
 首次提次之后的每个提交对象还会包含一个指向上次提交对象的指针（parent).
 
 Git 中的分支，其实本质上仅仅是个指向 commit 对象的可变指针。Git 会使用 master 作为分支的默认名字。在若干次提交后，你其实已经有了一个指向最后一次提交对象的 master 分支，它在每次提交的时候都会自动向前移动。
