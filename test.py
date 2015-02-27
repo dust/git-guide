@@ -8,3 +8,8 @@ def foo():
 
 def hotfix():
     print "hotfix"
+def change_for_iss53():
+    print "iss53"
+    
+def charge2_for_iss53():
+    print 'iss53_2'
