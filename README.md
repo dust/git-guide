@@ -562,9 +562,78 @@ Git 中的分支实际上仅是一个包含所指对象校验和（40 个字符�
 
 * 合并分支
 
+在iss53的工作完成之后，可以合并回 master 分支。
 
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git checkout master
+    Already on 'master'
+    Your branch is ahead of 'origin/master' by 2 commits.
+      (use "git push" to publish your local commits)
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git merge iss53
+    Auto-merging test.py
+    CONFLICT (content): Merge conflict in test.py
+    Automatic merge failed; fix conflicts and then commit the result.
 
+因为master(hotfix)和iss53都修改了同一个文件的相同位置，所以合并出现冲突，手工处理完冲突文件后，使用git status确认。确认所有冲突都已解决，也就是进入了暂存区，就可以用 git commit 来完成这次合并提交。必要时给更多冲突处理细节，放到提交的注释之中(不采用-m)这种简易的方式提交。
 
+```
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git status
+    On branch master
+    Your branch is ahead of 'origin/master' by 2 commits.
+      (use "git push" to publish your local commits)
+
+    All conflicts fixed but you are still merging.
+      (use "git commit" to conclude merge)
+
+    Changes to be committed:
+
+	    modified:   test.py
+
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git commit -m 'fixed conflict'
+    [master bf9f2b6] fixed conflict
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git log --graph
+    *   commit bf9f2b68e026cd8405dca05c947b4cde2613bdef
+    |\  Merge: 7af0f18 fcc1a90
+    | | Author: dust <dust@downjoy.com>
+    | | Date:   Fri Feb 27 18:09:24 2015 +0800
+    | | 
+    | |     fixed conflict
+    | |   
+    | * commit fcc1a907e83e0c7260cda33af2a5e6aecc6ea000
+    | | Author: dust <dust@downjoy.com>
+    | | Date:   Fri Feb 27 17:57:47 2015 +0800
+    | | 
+    | |     change2 for iss53
+    | |   
+    | * commit 949847fac57e105b29c4471c502518f723b82edb
+    | | Author: dust <dust@downjoy.com>
+    | | Date:   Fri Feb 27 17:29:12 2015 +0800
+    | | 
+    | |     change for [issue 53]
+    | |   
+    * | commit 7af0f18fb8becffe274c1e2dc5d8d37b1a2f975d
+    | | Author: dust <dust@downjoy.com>
+    | | Date:   Fri Feb 27 18:04:24 2015 +0800
+    | | 
+    | |     addation commit
+    | |   
+    * | commit 6390d0d77579aff04d9647b594eca7565635adff
+    |/  Author: dust <dust@downjoy.com>
+    |   Date:   Fri Feb 27 17:44:43 2015 +0800
+    |   
+    |       fixed broken...
+    |    
+    *   commit 75f605b55794bada6e721dc7fd3b209807581a32
+    |\  Merge: 496e3d3 6d24cc0
+    | | Author: dust <dust@downjoy.com>
+    | | Date:   Fri Feb 27 17:22:36 2015 +0800
+    | | 
+    | |     Merge branch 'master' of github.com:dust/git-guide
+    | |     
+    | *   commit 6d24cc074ba6c9ac2dd7b2805cf0cf076da95a91
+    | |\  Merge: f3d7eee e5782c4
+    | | | Author: dust <dust@kmfrog.com>
+    | | | Date:   Fri Feb 27 17:09:39 2015 +0800
+```
 
 
 
