@@ -51,7 +51,7 @@ Git简易指南
     # 此为注释 – 将被 Git 忽略
     # 忽略所有 .a 结尾的文件
     *.a
-    # 但 lib.a 除外
+    # 但 lib.a 除外https://raw.githubusercontent.com/dust/git-guide/master/etc/status-flow.png
     !lib.a
     # 仅仅忽略项目根目录下的 TODO 文件，不包括 subdir/TODO
     /TODO
@@ -407,10 +407,75 @@ Git 使用的标签有两种类型：轻量级的（lightweight）和含附注�
     * [new tag] v1.5 -> v1.5
 ```
 
-# 分枝
+# 分支
 Git 的分支可谓是难以置信的轻量级，它的新建操作几乎可以在瞬间完成，并且在不同分支间切换起来也差不多一样快。和许多其他版本控制系统不同，Git 鼓励在工作流程中频繁使用分支与合并，哪怕一天之内进行许多次都没有关系。理解分支的概念并熟练运用后，你才会意识到为什么 Git 是一个如此强大而独特的工具，并从此真正改变你的开发方式。
 
-# 理解分枝
+## 理解分支
+
+* 分支的存储结构
+
+    $ git add README test.rb LICENSE
+    $ git commit -m 'initial commit of my project'
+
+这样的一个提交中，概念上来说，仓库中各个对象保存的数据和相互关系看起来如图所示：
+
+![storage struct of a commit](https://raw.githubusercontent.com/dust/git-guide/master/etc/a-commit-struct.png)
+仓库中共有5个对象，三个文件的快照内容blob对象，一个目录树索引对象，一个指向目录树(root)的索引及其它元数据的commit对象。如果再经过两次修改及提交后，仓库历史会变成如图所示的结构：
+
+![多次提交后存储结构](https://raw.githubusercontent.com/dust/git-guide/master/etc/multi-commit-relationship-graph.png)
+首次提次之后的每个提交对象还会包含一个指向上次提交对象的指针（parent).
+
+Git 中的分支，其实本质上仅仅是个指向 commit 对象的可变指针。Git 会使用 master 作为分支的默认名字。在若干次提交后，你其实已经有了一个指向最后一次提交对象的 master 分支，它在每次提交的时候都会自动向前移动。
+
+![master其实是一个缺省分支名](https://raw.githubusercontent.com/dust/git-guide/master/etc/master-as-default-branch.png)
+
+创建一个新的分支指针。比如新建一个 testing 分支，可以使用 git branch 命令：
+
+    $ git branch testing
+
+这会在当前 commit 对象上新建一个分支指针，见下图。
+
+![创建分支](https://raw.githubusercontent.com/dust/git-guide/master/etc/create-branch.png)
+
+此时，其实有多个分支指向同一个提交，那么我当前工作在哪个分支上以及如何改变我当前工作的分支呢？ 其实着一个名为 HEAD 的特别指针，它是一个指向你正在工作中的本地分支的指针（可以将 HEAD 想象为当前分支的别名。）。运行 git branch 命令，仅仅是建立了一个新的分支，但不会自动切换到这个分支中去，所以在这个例子中，我们依然还在 master 分支里工作，见下图(HEAD 指向当前所在的分支)。
+
+![多分支的结构（包含当前工作所在分支）](https://raw.githubusercontent.com/dust/git-guide/master/etc/multi-branch-struct.png)
+
+要切换到其他分支，可以执行 git checkout 命令。我们现在转换到新建的 testing 分支：
+
+    $ git checkout testing
+    
+这样 HEAD 就指向了 testing 分支。
+
+![多分支工作环境](https://raw.githubusercontent.com/dust/git-guide/master/etc/multi-branch-work-environment.png)
+
+如果此时，我们再提交一次。
+
+    $ vim test.rb
+    $ git commit -a -m 'made a change'
+
+提交后的结果如图，并且每次提交后，HEAD 随着分支一起向前移动，而 master 分支仍然指向原先 git checkout 时所在的 commit 对象。
+
+![在新分支上工作](https://raw.githubusercontent.com/dust/git-guide/master/etc/work-on-new-branch.png)
+
+如果我们切换回到master分支
+
+    $ git checkout master
+
+![切换到master分支](https://raw.githubusercontent.com/dust/git-guide/master/etc/change-to-master-branch.png)
+
+这条命令做了两件事。它把 HEAD 指针移回到 master 分支，**并把工作目录中的文件换成了 master 分支所指向的快照内容**。也就是说，现在开始所做的改动，将始于本项目中一个较老的版本。它的主要作用是将 testing 分支里作出的修改暂时取消，这样你就可以向另一个方向进行开发。
+
+们作些修改后再次提交：
+
+    $ vim test.rb
+    $ git commit -a -m 'made other changes'
+
+现在我们的项目提交历史产生了分叉，因为刚才我们创建了一个分支，转换到其中进行了一些工作，然后又回到原来的主分支进行了另外一些工作。这些改变分别孤立在不同的分支里：我们可以在不同分支里反复切换，并在时机成熟时把它们合并到一起。而所有这些工作，仅仅需要 branch 和 checkout 这两条命令就可以完成。
+
+![在多分支上工作](https://raw.githubusercontent.com/dust/git-guide/master/etc/work-on-multi-branch.png)
+
+Git 中的分支实际上仅是一个包含所指对象校验和（40 个字符长度 SHA-1 字串）的文件，所以创建和销毁一个分支就变得非常廉价。说白了，新建一个分支就是向一个文件写入 41 个字节（外加一个换行符）那么简单，当然也就很快了。Git 的实现与项目复杂度无关，它永远可以在几毫秒的时间内完成分支的创建和切换。同时，因为每次提交时都记录了祖先信息（译注：即 parent 对象），将来要合并分支时，寻找恰当的合并基础（即共同祖先）的工作其实已经自然而然地摆在那里了，所以实现起来非常容易。Git 鼓励开发者频繁使用分支，正是因为有着这些特性作保障。
 
 
 
