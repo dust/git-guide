@@ -635,6 +635,8 @@ Git 中的分支实际上仅是一个包含所指对象校验和（40 个字符�
     | | | Date:   Fri Feb 27 17:09:39 2015 +0800
 ```
 
+最终仓库如图：
 
+![master合并hotfix之后](https://raw.githubusercontent.com/dust/git-guide/master/etc/branch-4.png)
 
 
