@@ -5,3 +5,6 @@
 def foo():
     print "test"
 
+
+def hotfix():
+    print "hotfix"
