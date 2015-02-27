@@ -483,10 +483,12 @@ Git 中的分支实际上仅是一个包含所指对象校验和（40 个字符�
 
 * 创建及切换到分支
 
+```
     dust@dust-t400:~/myworks/kmfrog/git-guide$ git branch iss53
     dust@dust-t400:~/myworks/kmfrog/git-guide$ git checkout iss53
     Switched to branch 'iss53'
-    
+```
+
 或者：
 
     dust@dust-t400:~/myworks/kmfrog/git-guide$ git checkout -b iss53
