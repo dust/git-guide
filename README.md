@@ -479,6 +479,92 @@ Git 中的分支，其实本质上仅仅是个指向 commit 对象的可变指�
 
 Git 中的分支实际上仅是一个包含所指对象校验和（40 个字符长度 SHA-1 字串）的文件，所以创建和销毁一个分支就变得非常廉价。说白了，新建一个分支就是向一个文件写入 41 个字节（外加一个换行符）那么简单，当然也就很快了。Git 的实现与项目复杂度无关，它永远可以在几毫秒的时间内完成分支的创建和切换。同时，因为每次提交时都记录了祖先信息（译注：即 parent 对象），将来要合并分支时，寻找恰当的合并基础（即共同祖先）的工作其实已经自然而然地摆在那里了，所以实现起来非常容易。Git 鼓励开发者频繁使用分支，正是因为有着这些特性作保障。
 
+## 分支的基本操作
+
+* 创建及切换到分支
+
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git branch iss53
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git checkout iss53
+    Switched to branch 'iss53'
+    
+或者：
+
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git checkout -b iss53
+    Switched to branch 'iss53'
+
+在分支iss53上工作：
+
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ vim test.py
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git add -u
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git commit -m 'change for [issue 53]'
+    [iss53 949847f] change for [issue 53]
+     1 file changed, 2 insertions(+)
+
+现在仓库中如图：
+
+![在iss53上产生一个提交](https://raw.githubusercontent.com/dust/git-guide/master/etc/branch-1.png)
+
+如果现在需要马上修补master分支，有了 Git ，就可以不同时发布这个补丁和 iss53 里作出的修改，也不需要在master分支上复原iss53上的修改。唯一需要的仅仅是切换回 master 分支。
+
+不过在此之前，留心你的暂存区或者工作目录里，那些还没有提交的修改，它会和你即将检出的分支产生冲突从而阻止 Git 为你切换分支。切换分支的时候最好保持一个清洁的工作区域。（扩展学习：有绕过这种问题的办法（分别叫做 stashing 和 commit amending））。目前已经提交了所有的修改，所以接下来可以正常转换到 master 分支：
+
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git checkout master
+    Switched to branch 'master'
+    Your branch is up-to-date with 'origin/master'.
+    
+此时工作目录中的内容和你在解决问题 #53 之前一模一样。（**Git 会把工作目录的内容恢复为检出某分支时它所指向的那个提交对象的快照。它会自动添加、删除和修改文件以确保目录的内容和你当时提交时完全一样。**), 修订错误并测试。比如同样修改test.py文件。
+
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git checkout -b 'hotfix'
+    Switched to a new branch 'hotfix'
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ vim test.py
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git add -u
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git commit -m 'fixed broken...'
+    [hotfix 6390d0d] fixed broken...
+     1 file changed, 3 insertions(+)
+
+此时仓库中如图：
+
+![在hotfix上产生一个提交](https://raw.githubusercontent.com/dust/git-guide/master/etc/branch-2.png)
+
+经过验证后，确认修补成功。此时需要回到｀master `分支，把它合并进来，然后发布到产品环境。此时可以使用git merge命令进行合并。
+
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git checkout master
+    Switched to branch 'master'
+    Your branch is up-to-date with 'origin/master'.
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git merge hotfix
+    Updating 75f605b..6390d0d
+    Fast-forward
+     test.py | 3 +++
+     1 file changed, 3 insertions(+)
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git branch
+      hotfix
+      iss53
+    * master
+
+请注意，合并时出现了“Fast forward”的提示。由于当前 master 分支所在的提交对象是要并入的 hotfix 分支的直接上游，Git 只需把 master 分支指针直接右移。换句话说，如果顺着一个分支走下去可以到达另一个分支的话，那么 Git 在合并两者时，只会简单地把指针右移，因为这种单线的历史分支不存在任何需要解决的分歧，所以这种合并过程可以称为快进（Fast forward）。
+
+现在最新的修改已经在当前 master 分支所指向的提交对象中了，可以部署到生产服务器上去了。
+
+![master合并hotfix之后](https://raw.githubusercontent.com/dust/git-guide/master/etc/branch-3.png)
+
+由于当前 hotfix 分支和 master 都指向相同的提交对象，所以 hotfix 已经完成了历史使命，可以删掉了。使用 git branch 的 -d 选项执行删除，然后再回到之前未完成的`iss53`分支上继续工作, 可以发现test.py的内容回到iss53最后一次提交的状态，而且不包含hotfix的内容。**也就是说iss53分支完全未受hotfix影响**。
+     
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git branch -d hotfix
+    Deleted branch hotfix (was 6390d0d).
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ vim test.py 
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git add -u
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git commit -m 'change2 for iss53'
+    [iss53 fcc1a90] change2 for iss53
+     1 file changed, 3 insertions(+)
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git branch
+    * iss53
+      master
+
+* 合并分支
+
+
+
+
 
 
 
