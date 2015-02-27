@@ -5,3 +5,5 @@
 def foo():
     print "test"
 
+def change_for_iss53():
+    print "iss53"
