@@ -3,6 +3,7 @@ Git简易指南
 2015.2.13
 
 # 配置git帐户
+略。
 
 # getting started
 * 从本地创建仓库
@@ -34,11 +35,11 @@ Git简易指南
 
 # 基本概念和版本控制流程
 
-![场景及流程图](https://raw.githubusercontent.com/dust/git-guide/master/etc/status-flow.png)
-
 ## git add
 * tracked
+用个人理解的通俗说法，就是确认本次对某文件的修订。
 * untrack
+将某文件添加到版本控制系统。
 
 ## .gitignore
 * 所有空行或者以注释符号 ＃ 开头的行都会被 Git 忽略。
@@ -51,7 +52,7 @@ Git简易指南
     # 此为注释 – 将被 Git 忽略
     # 忽略所有 .a 结尾的文件
     *.a
-    # 但 lib.a 除外https://raw.githubusercontent.com/dust/git-guide/master/etc/status-flow.png
+    # 但 lib.a 除外
     !lib.a
     # 仅仅忽略项目根目录下的 TODO 文件，不包括 subdir/TODO
     /TODO
@@ -62,13 +63,44 @@ Git简易指南
 
 
 ## git commit
-* 暂存区(stage area)
+将修订提到版本管理系统。
 * commit-id/change-id
-* unmodified/modified/staged-->提交后，修改前/修改并保存/提交后
+
+## 概念和流程
+![流程及状态图](https://raw.githubusercontent.com/dust/git-guide/master/etc/status-flow.png)
+
+* 理解暂存区(stage area)
+
+先看看git add命令的官方解释。
+
+```
+NAME
+       git-add - Add file contents to the index
+
+DESCRIPTION
+       This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit. It typically adds the current content of existing paths as a whole, but with some options it can also be used to add content with only part of the changes made to the working tree files applied, or remove paths that do not exist in the working tree anymore.
+
+       The "index" holds a snapshot of the content of the working tree, and it is this snapshot that is taken as the contents of the next commit. Thus after making any changes to the working directory, and before running the commit command, you must use the add command to add any new or modified files to the index.
+
+       This command can be performed multiple times before a commit. It only adds the content of the specified file(s) at the time the add command is run; if you want subsequent changes included in the next commit, then you must run git add again to add the new content to the index.
+
+       The git status command can be used to obtain a summary of which files have changes that are staged for the next commit.
+```
+
+git仓库保存着文件的所有历史版本及其相关索引。“这个命令将用在工作目录树上发现的当前内容去更新索引，并且为下次提交准备暂存内容。这个”索引“保持着一个指向工作目录树内容的快照。并且这个快照是为下次提交准备的内容。
+           
+* unmodified/modified/staged/<commit>
+
+刚克隆、pull完成或提交后/修改并保存/git add后/提交(是一个动作，而不是一个持续的状态)
+
 * git diff/git diff --staged(同--cached)
-    git diff 比较的是最近一次暂存（commit)的modified和当前medified的变化。**而非当前modified和staged(“已提交/commit”)的变化**
-    git diff --staged 比较的是最近一次push的staged和当前提交(commit)staged的变化。
-    每次提交(commit)都是在暂存区中staged状态的一个快照，未包含到此次提交(commit)中的文件(即未git add 进来的变化/modified)仍保持modified状态，以后可以回到某个快照的状态，或者进行比较。换个通俗的说法，就是每个git add都是更细粒度的对git commit的精确控制和准备。
+
+git diff 比较的是当前文件内容（modified)和(最近一次)暂存区（add后)的文件变化。**而非当前文件内容(modified)和已提交(commit后)的变化**
+
+git diff --staged 比较的是当前staged（已暂存/add后）和(最近一次)提交(commit后)的快照的变化。
+
+每次提交(commit)的都是已暂存（staged）的快照，未包含到已暂存快照的文件(即未git add 进来的变化(modified))仍保持modified状态。每次提交都是对项目的一个快照，以后可以回到某个快照的状态，或者进行比较。(言外之意：**暂存区的状态是不可以回朔的**)。换个通俗的说法，就是每个git add都是更细粒度的对git commit的精确控制和准备。
+
 
 ## (从git)移除文件
 使用git rm 完成移除操作，包括从git跟踪系统中移除连带从工作目录中删除文件。如果只是从工作目录中删除文件，在git status时，时就会显示在Changes not staged for commit之中，这里可以再次运行git rm完成从跟踪系统中移除此文件。
@@ -87,12 +119,15 @@ git rm \*~
 
 ## 移动文件（重构）
 * git mv
-    相当于下面三条命令。
+
+相当于下面三条命令。
+    
 ``` shell
 mv README.txt README
 git rm README.txt
 git add README
 ```
+
 即便你分开进行上述三个操作，git也会意识到这是一次重命名操作。但如果手工或使用其它工程改名的话，注意在提交前先remove, 然后再add操作。
 
 ## 查看提交历史
@@ -414,8 +449,10 @@ Git 的分支可谓是难以置信的轻量级，它的新建操作几乎可以�
 
 * 分支的存储结构
 
+```
     $ git add README test.rb LICENSE
     $ git commit -m 'initial commit of my project'
+```
 
 这样的一个提交中，概念上来说，仓库中各个对象保存的数据和相互关系看起来如图所示：
 
@@ -642,3 +679,81 @@ Git 中的分支实际上仅是一个包含所指对象校验和（40 个字符�
 ![master合并hotfix之后](https://raw.githubusercontent.com/dust/git-guide/master/etc/branch-4.png)
 
 
+## 管理分支
+
+｀git branch　-v` 可以查看各个分支最后一个提交对象的信息。
+
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git branch -v
+      iss53  fcc1a90 change2 for iss53
+    * master ce6478c format
+
+其它管理操作
+
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git branch
+      iss53
+    * master
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git branch --merged
+      iss53
+    * master
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git branch test
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git branch
+      iss53
+    * master
+      test
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git checkout test
+    M	README.md
+    Switched to branch 'test'
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ vim test.py
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git add -u
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git commit -m 'for test'
+    [test bcf527c] for test
+     2 files changed, 34 insertions(+), 13 deletions(-)
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git checkout master
+    Switched to branch 'master'
+    Your branch is up-to-date with 'origin/master'.
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git branch --no-merged
+      test
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git branch --merged
+      iss53
+    * master
+
+## 分支的衍合
+
+把一个分支的修改整合到另一个分支，有两种办法：merge和rebase（衍合）。之前的合并是开发过程到了两个不同的分支后，又各自提交了更新。
+
+![分支开发](https://raw.githubusercontent.com/dust/git-guide/master/etc/rebase-1.png)
+
+通过 `merge` 命令，它会把两个分支最新快照(c3,c4)以及共同的最新的祖先(c2)进行3方合并，合并的结果是产生一个新的提交对象(c5)，通过合并一个分支来整合分叉了的历史。
+
+![合并分支](https://raw.githubusercontent.com/dust/git-guide/master/etc/rebase-2.png)
+
+另一个选择是把在C3里产生的变化，放到c4的基础上重新回放一遍。git把这种操作叫做rebase。
+
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git checkout -b experiment
+    M	README.md
+    Switched to a new branch 'experiment'
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ vim test.py
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git add -u
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git commit -m 'change for experiment'
+    [master 7f0fc63] change for experiment
+     2 files changed, 46 insertions(+)
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git rebase master
+    First, rewinding head to replay your work on top of it...
+    Fast-forwarded experiment to master.
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git branch
+    * experiment
+      iss53
+      master
+      test
+
+它的原理是回到两个分支最新的共祖先，将后续历次提交对象（本例中只有一个C3），生成一系列的patch，然后以基底分支（本例中是master)最后一个提交对象为出发点，逐一应用之前准备好的patch，最后会生成一个新的合并过的提交对象(C3'),从而改写expriment分支的提交历史，使它成为master分支的直接下游。
+
+![rebase的原理](https://raw.githubusercontent.com/dust/git-guide/master/etc/rebase-3.png)
+
+把c3的改变path3在c4上回放一遍后，回到` master `分支，进行一次Fast-forwarded。虽然最终结果和上例中使用merge的结果没有任何区别，但rebase能产生一个更为整洁的提交历史。看起来会更清楚，仿佛所有修改是在一条线上先后进行的，尽管它们其实是同时并发产生的。
+
+一般我们使用衍合的目的，是想要得到一个能在远程分支上干净应用的补丁 — 比如某些项目你不是维护者，但想帮点忙的话，最好用衍合：先在自己的一个分支里进行开发，当准备向主项目提交补丁的时候，根据最新的 origin/master 进行一次衍合操作然后再提交，这样维护者就不需要做任何整合工作（译注：实际上是把解决分支补丁同最新主干代码之间冲突的责任，化转为由提交补丁的人来解决。），只需根据你提供的仓库地址作一次快进合并，或者直接采纳你提交的补丁。
+
+请注意，合并结果中最后一次提交所指向的快照，无论是通过衍合，还是三方合并，都会得到相同的快照内容，只不过提交历史不同罢了。衍合是按照每行的修改次序重演一遍修改，而合并是把最终结果合在一起。
+
+ 
