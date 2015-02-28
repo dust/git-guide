@@ -687,4 +687,47 @@ Git 中的分支实际上仅是一个包含所指对象校验和（40 个字符�
       iss53  fcc1a90 change2 for iss53
     * master ce6478c format
 
+其它管理操作
 
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git branch
+      iss53
+    * master
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git branch --merged
+      iss53
+    * master
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git branch test
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git branch
+      iss53
+    * master
+      test
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git checkout test
+    M	README.md
+    Switched to branch 'test'
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ vim test.py
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git add -u
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git commit -m 'for test'
+    [test bcf527c] for test
+     2 files changed, 34 insertions(+), 13 deletions(-)
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git checkout master
+    Switched to branch 'master'
+    Your branch is up-to-date with 'origin/master'.
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git branch --no-merged
+      test
+    dust@dust-t400:~/myworks/kmfrog/git-guide$ git branch --merged
+      iss53
+    * master
+
+## 分支的衍合
+
+把一个分支的修改整合到另一个分支，有两种办法：merge和rebase（衍合）。之前的合并是开发过程到了两个不同的分支后，又各自提交了更新。
+
+![分支开发](https://raw.githubusercontent.com/dust/git-guide/master/etc/rebase-1.png)
+
+通过 `merge` 命令，它会把两个分支最新快照(c3,c4)以及共同的最新的祖先(c2)进行3方合并，合并的结果是产生一个新的提交对象(c5)，通过合并一个分支来整合分叉了的历史。
+
+![合并分支](https://raw.githubusercontent.com/dust/git-guide/master/etc/rebase-2.png)
+
+另一个选择是把在C3里产生的变化，放到c4的基础上重新回放一遍。git把这种操作叫做rebase。
+
+
+ 
