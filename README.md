@@ -3,6 +3,7 @@ Git简易指南
 2015.2.13
 
 # 配置git帐户
+略。
 
 # getting started
 * 从本地创建仓库
@@ -34,11 +35,11 @@ Git简易指南
 
 # 基本概念和版本控制流程
 
-![场景及流程图](https://raw.githubusercontent.com/dust/git-guide/master/etc/status-flow.png)
-
 ## git add
 * tracked
+用个人理解的通俗说法，就是确认本次对某文件的修订。
 * untrack
+将某文件添加到版本控制系统。
 
 ## .gitignore
 * 所有空行或者以注释符号 ＃ 开头的行都会被 Git 忽略。
@@ -51,7 +52,7 @@ Git简易指南
     # 此为注释 – 将被 Git 忽略
     # 忽略所有 .a 结尾的文件
     *.a
-    # 但 lib.a 除外https://raw.githubusercontent.com/dust/git-guide/master/etc/status-flow.png
+    # 但 lib.a 除外
     !lib.a
     # 仅仅忽略项目根目录下的 TODO 文件，不包括 subdir/TODO
     /TODO
@@ -62,13 +63,41 @@ Git简易指南
 
 
 ## git commit
-* 暂存区(stage area)
+将修订提到版本管理系统。
 * commit-id/change-id
-* unmodified/modified/staged-->提交后，修改前/修改并保存/提交后
+
+## 概念和流程
+![流程及状态图](https://raw.githubusercontent.com/dust/git-guide/master/etc/status-flow.png)
+
+* 理解暂存区(stage area)
+先看看git add命令的官方解释。
+
+    NAME
+           git-add - Add file contents to the index
+    DESCRIPTION
+           This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit. It typically
+           adds the current content of existing paths as a whole, but with some options it can also be used to add content with only part of the changes made
+           to the working tree files applied, or remove paths that do not exist in the working tree anymore.
+
+           The "index" holds a snapshot of the content of the working tree, and it is this snapshot that is taken as the contents of the next commit. Thus
+           after making any changes to the working directory, and before running the commit command, you must use the add command to add any new or modified
+           files to the index.
+
+           This command can be performed multiple times before a commit. It only adds the content of the specified file(s) at the time the add command is run;
+           if you want subsequent changes included in the next commit, then you must run git add again to add the new content to the index.
+
+           The git status command can be used to obtain a summary of which files have changes that are staged for the next commit.
+
+git仓库保存着文件的所有历史版本及其相关索引。“这个命令将用在工作目录树上发现的当前内容去更新索引，并且为下次提交准备暂存内容。这个”索引“保持着一个指向工作目录树内容的快照。并且这个快照是为下次提交准备的内容。
+           
+* unmodified/modified/staged/<commit>
+刚克隆、pull完成或提交后/修改并保存/git add后/提交(是一个动作，而不是一个持续的状态)
+
+
 * git diff/git diff --staged(同--cached)
-    git diff 比较的是最近一次暂存（commit)的modified和当前medified的变化。**而非当前modified和staged(“已提交/commit”)的变化**
-    git diff --staged 比较的是最近一次push的staged和当前提交(commit)staged的变化。
-    每次提交(commit)都是在暂存区中staged状态的一个快照，未包含到此次提交(commit)中的文件(即未git add 进来的变化/modified)仍保持modified状态，以后可以回到某个快照的状态，或者进行比较。换个通俗的说法，就是每个git add都是更细粒度的对git commit的精确控制和准备。
+    git diff 比较的是当前文件内容（modified)和(最近一次)暂存区（add后)的文件变化。**而非当前文件内容(modified)和已提交(commit后)的变化**
+    git diff --staged 比较的是当前staged（已暂存/add后）和(最近一次)提交(commit后)的快照的变化。
+    每次提交(commit)的都是已暂存（staged）的快照，未包含到已暂存快照的文件(即未git add 进来的变化(modified))仍保持modified状态。每次提交都是对项目的一个快照，以后可以回到某个快照的状态，或者进行比较。(言外之意：**暂存区的状态是不可以回朔的**)。换个通俗的说法，就是每个git add都是更细粒度的对git commit的精确控制和准备。
 
 ## (从git)移除文件
 使用git rm 完成移除操作，包括从git跟踪系统中移除连带从工作目录中删除文件。如果只是从工作目录中删除文件，在git status时，时就会显示在Changes not staged for commit之中，这里可以再次运行git rm完成从跟踪系统中移除此文件。
